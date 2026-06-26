@@ -41,7 +41,7 @@ userManagementApp.post('/register', adminmiddleware, async (req, res) => {
         res.status(201).json({ message: "User registered successfully", user: newUser });
     } catch (error) {
         res.status(400).json({ 
-    "error": "User validation failed: age: Age must be at least 18"
+       error: error.message
  });
     }
 });
