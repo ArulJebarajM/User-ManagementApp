@@ -40,7 +40,9 @@ userManagementApp.post('/register', adminmiddleware, async (req, res) => {
         const newUser = await User.create(userdata);   
         res.status(201).json({ message: "User registered successfully", user: newUser });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ 
+    "error": "User validation failed: age: Age must be at least 18"
+ });
     }
 });
 
@@ -62,7 +64,9 @@ userManagementApp.put('/register/:id', async (req, res) => {
         const updatedUser = await User.findByIdAndUpdate(
             req.params.id,
             req.body,
-            { new: true }
+            { new: true,
+                runValidators: true
+             }
         );
 
         if (!updatedUser) {
