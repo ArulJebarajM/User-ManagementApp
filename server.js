@@ -31,23 +31,23 @@ const adminmiddleware=(req,res,next)=>{
 
 
 
-const User = require('./models/user'); // make sure path is correct
+const User = require('./models/user'); 
 
-// Save new user to MongoDB
+
 userManagementApp.post('/register', adminmiddleware, async (req, res) => {
     try {
         const userdata = req.body;
-        const newUser = await User.create(userdata);   // <-- saves to MongoDB
+        const newUser = await User.create(userdata);   
         res.status(201).json({ message: "User registered successfully", user: newUser });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
 
-// Get all users from MongoDB
+
 userManagementApp.get('/register', adminmiddleware, async (req, res) => {
     try {
-        const users = await User.find();   // <-- fetches from MongoDB
+        const users = await User.find();   
         res.status(200).json({ users });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -55,22 +55,59 @@ userManagementApp.get('/register', adminmiddleware, async (req, res) => {
 });
 
 
-// Update user in MongoDB
-userManagementApp.put('/register/:name', async (req, res) => {
+
+userManagementApp.put('/register/:id', async (req, res) => {
     try {
-        const updatedUser = await User.findOneAndUpdate(
-            { name: req.params.name },          // find by name
-            { age: req.body.age },              // update age
-            { new: true }                       // return updated document
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
         );
 
-        if (updatedUser) {
-            res.status(200).json({ message: "User updated successfully", user: updatedUser });
-        } else {
-            res.status(404).json({ message: "User not found" });
+        if (!updatedUser) {
+            return res.status(404).json({
+                message: "User not found"
+            });
         }
+
+        res.status(200).json({
+            message: "User updated successfully",
+            user: updatedUser
+        });
+
     } catch (error) {
-        res.status(500).json({ error: error.message });
+
+        res.status(500).json({
+            error: error.message
+        });
+
+    }
+});
+
+
+userManagementApp.delete('/register/:id', async (req, res) => {
+    try {
+
+        const deletedUser = await User.findByIdAndDelete(req.params.id);
+
+        if (!deletedUser) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        res.status(200).json({
+            message: "User deleted successfully",
+            user: deletedUser
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            error: error.message
+        });
+
     }
 });
 
