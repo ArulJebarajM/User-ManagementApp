@@ -1,5 +1,11 @@
 const express = require('express');
+const cors=require('cors');
+
+
 const userManagementApp = express();
+userManagementApp.use(cors());
+
+
 
 userManagementApp.use(express.json());
 userManagementApp.use(express.urlencoded({ extended: true }));
