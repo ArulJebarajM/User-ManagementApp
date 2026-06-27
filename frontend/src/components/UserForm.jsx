@@ -1,7 +1,7 @@
 import { useState } from "react";
 import api from "../services/api";
 
-function UserForm() {
+function UserForm({ getUsers }) {
 
     const [user, setUser] = useState({
         name: "",
@@ -10,7 +10,6 @@ function UserForm() {
     });
 
     const [message, setMessage] = useState("");
-
     const [error, setError] = useState("");
 
     const handleChange = (event) => {
@@ -35,6 +34,8 @@ function UserForm() {
 
             setMessage(response.data.message);
 
+            getUsers();
+
             setUser({
                 name: "",
                 email: "",
@@ -42,12 +43,10 @@ function UserForm() {
             });
 
         } catch (err) {
-    console.log(err);
 
-    setError(
-        err.response?.data?.error || "Something went wrong."
-    );
-}
+            setError(err.response.data.error);
+
+        }
 
     };
 

@@ -1,12 +1,14 @@
 import UserForm from "../components/UserForm";
 
-function AddUser() {
+function AddUser({ getUsers }) {
+
     return (
         <div className="container">
             <h1>Register User</h1>
-            <UserForm />
+            <UserForm getUsers={getUsers} />
         </div>
     );
+
 }
 
 export default AddUser;

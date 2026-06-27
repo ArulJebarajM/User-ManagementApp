@@ -1,12 +1,15 @@
 import UserTable from "../components/UserTable";
 
-function ViewUsers() {
+function ViewUsers({ users, getUsers }) {
 
     return (
         <div className="container">
             <h1>All Users</h1>
 
-            <UserTable />
+            <UserTable
+                users={users}
+                getUsers={getUsers}
+            />
 
         </div>
     );

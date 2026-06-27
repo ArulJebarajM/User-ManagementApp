@@ -1,21 +1,14 @@
-import { useEffect, useState } from "react";
 import api from "../services/api";
 
-function UserTable() {
+function UserTable({ users, getUsers }) {
 
-    const [users, setUsers] = useState([]);
-
-    useEffect(() => {
-        getUsers();
-    }, []);
-
-    async function getUsers() {
+    async function deleteUser(id) {
 
         try {
 
-            const response = await api.get("/register");
+            await api.delete(`/register/${id}`);
 
-            setUsers(response.data.users);
+            getUsers();
 
         } catch (error) {
 
@@ -49,13 +42,18 @@ function UserTable() {
                     <tr key={user._id}>
 
                         <td>{user.name}</td>
+
                         <td>{user.email}</td>
+
                         <td>{user.age}</td>
 
                         <td>
 
                             <button>Edit</button>
-                            <button>Delete</button>
+
+                            <button onClick={() => deleteUser(user._id)}>
+                                Delete
+                            </button>
 
                         </td>
 
