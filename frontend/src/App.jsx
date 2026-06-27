@@ -8,18 +8,29 @@ function App() {
 
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     async function getUsers() {
 
         try {
 
+            setLoading(true);
+
             const response = await api.get("/register");
 
             setUsers(response.data.users);
 
-        } catch (error) {
+        }
+
+        catch (error) {
 
             console.log(error);
+
+        }
+
+        finally {
+
+            setLoading(false);
 
         }
 
@@ -45,6 +56,7 @@ function App() {
 
             <ViewUsers
                 users={users}
+                loading={loading}
                 getUsers={getUsers}
                 setSelectedUser={setSelectedUser}
             />

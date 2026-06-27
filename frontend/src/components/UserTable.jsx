@@ -3,12 +3,19 @@ import api from "../services/api";
 function UserTable({
 
     users,
+    loading,
     getUsers,
     setSelectedUser
 
 }) {
 
     async function deleteUser(id) {
+
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this user?"
+        );
+
+        if (!confirmDelete) return;
 
         try {
 
@@ -23,6 +30,18 @@ function UserTable({
             console.log(error);
 
         }
+
+    }
+
+    if (loading) {
+
+        return <h2>Loading users...</h2>;
+
+    }
+
+    if (users.length === 0) {
+
+        return <h2>No users found.</h2>;
 
     }
 

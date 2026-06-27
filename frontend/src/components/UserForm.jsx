@@ -18,8 +18,8 @@ function UserForm({
     });
 
     const [message, setMessage] = useState("");
-
     const [error, setError] = useState("");
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
 
@@ -53,15 +53,15 @@ function UserForm({
         event.preventDefault();
 
         setMessage("");
-
         setError("");
+
+        setSubmitting(true);
 
         try {
 
             if (selectedUser) {
 
                 const response = await api.put(
-
                     `/register/${selectedUser._id}`,
                     user
                 );
@@ -97,7 +97,15 @@ function UserForm({
 
         catch (err) {
 
-            setError(err.response?.data?.error || "Something went wrong");
+            setError(
+                err.response?.data?.error || "Something went wrong"
+            );
+
+        }
+
+        finally {
+
+            setSubmitting(false);
 
         }
 
@@ -108,50 +116,43 @@ function UserForm({
         <form onSubmit={handleSubmit}>
 
             <input
-
                 type="text"
-
                 name="name"
-
                 placeholder="Enter Name"
-
                 value={user.name}
-
                 onChange={handleChange}
-
             />
 
             <input
-
                 type="email"
-
                 name="email"
-
                 placeholder="Enter Email"
-
                 value={user.email}
-
                 onChange={handleChange}
-
             />
 
             <input
-
                 type="number"
-
                 name="age"
-
                 placeholder="Enter Age"
-
                 value={user.age}
-
                 onChange={handleChange}
-
             />
 
-            <button type="submit">
+            <button
+                type="submit"
+                disabled={submitting}
+            >
 
-                {selectedUser ? "Update User" : "Register User"}
+                {
+                    submitting
+                        ? selectedUser
+                            ? "Updating..."
+                            : "Registering..."
+                        : selectedUser
+                            ? "Update User"
+                            : "Register User"
+                }
 
             </button>
 
