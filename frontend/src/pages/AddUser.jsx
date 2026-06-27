@@ -1,12 +1,35 @@
 import UserForm from "../components/UserForm";
 
-function AddUser({ getUsers }) {
+function AddUser({
+
+    getUsers,
+    selectedUser,
+    setSelectedUser
+
+}) {
 
     return (
+
         <div className="container">
-            <h1>Register User</h1>
-            <UserForm getUsers={getUsers} />
+
+            <h1>
+
+                {selectedUser ? "Update User" : "Register User"}
+
+            </h1>
+
+            <UserForm
+
+                getUsers={getUsers}
+
+                selectedUser={selectedUser}
+
+                setSelectedUser={setSelectedUser}
+
+            />
+
         </div>
+
     );
 
 }

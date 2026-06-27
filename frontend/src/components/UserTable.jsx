@@ -1,6 +1,12 @@
 import api from "../services/api";
 
-function UserTable({ users, getUsers }) {
+function UserTable({
+
+    users,
+    getUsers,
+    setSelectedUser
+
+}) {
 
     async function deleteUser(id) {
 
@@ -10,7 +16,9 @@ function UserTable({ users, getUsers }) {
 
             getUsers();
 
-        } catch (error) {
+        }
+
+        catch (error) {
 
             console.log(error);
 
@@ -37,29 +45,39 @@ function UserTable({ users, getUsers }) {
 
             <tbody>
 
-                {users.map((user) => (
+                {
 
-                    <tr key={user._id}>
+                    users.map((user) => (
 
-                        <td>{user.name}</td>
+                        <tr key={user._id}>
 
-                        <td>{user.email}</td>
+                            <td>{user.name}</td>
 
-                        <td>{user.age}</td>
+                            <td>{user.email}</td>
 
-                        <td>
+                            <td>{user.age}</td>
 
-                            <button>Edit</button>
+                            <td>
 
-                            <button onClick={() => deleteUser(user._id)}>
-                                Delete
-                            </button>
+                                <button
+                                    onClick={() => setSelectedUser(user)}
+                                >
+                                    Edit
+                                </button>
 
-                        </td>
+                                <button
+                                    onClick={() => deleteUser(user._id)}
+                                >
+                                    Delete
+                                </button>
 
-                    </tr>
+                            </td>
 
-                ))}
+                        </tr>
+
+                    ))
+
+                }
 
             </tbody>
 

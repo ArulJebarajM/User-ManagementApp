@@ -1,22 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../services/api";
 
-function UserForm({ getUsers }) {
+function UserForm({
+
+    getUsers,
+    selectedUser,
+    setSelectedUser
+
+}) {
 
     const [user, setUser] = useState({
+
         name: "",
         email: "",
         age: ""
+
     });
 
     const [message, setMessage] = useState("");
+
     const [error, setError] = useState("");
+
+    useEffect(() => {
+
+        if (selectedUser) {
+
+            setUser({
+
+                name: selectedUser.name,
+                email: selectedUser.email,
+                age: selectedUser.age
+
+            });
+
+        }
+
+    }, [selectedUser]);
 
     const handleChange = (event) => {
 
         setUser({
+
             ...user,
             [event.target.name]: event.target.value
+
         });
 
     };
@@ -26,25 +53,51 @@ function UserForm({ getUsers }) {
         event.preventDefault();
 
         setMessage("");
+
         setError("");
 
         try {
 
-            const response = await api.post("/register", user);
+            if (selectedUser) {
 
-            setMessage(response.data.message);
+                const response = await api.put(
 
-            getUsers();
+                    `/register/${selectedUser._id}`,
+                    user
+                );
+
+                setMessage(response.data.message);
+
+                setSelectedUser(null);
+
+            }
+
+            else {
+
+                const response = await api.post(
+                    "/register",
+                    user
+                );
+
+                setMessage(response.data.message);
+
+            }
 
             setUser({
+
                 name: "",
                 email: "",
                 age: ""
+
             });
 
-        } catch (err) {
+            getUsers();
 
-            setError(err.response.data.error);
+        }
+
+        catch (err) {
+
+            setError(err.response?.data?.error || "Something went wrong");
 
         }
 
@@ -55,36 +108,76 @@ function UserForm({ getUsers }) {
         <form onSubmit={handleSubmit}>
 
             <input
+
                 type="text"
+
                 name="name"
+
                 placeholder="Enter Name"
+
                 value={user.name}
+
                 onChange={handleChange}
+
             />
 
             <input
+
                 type="email"
+
                 name="email"
+
                 placeholder="Enter Email"
+
                 value={user.email}
+
                 onChange={handleChange}
+
             />
 
             <input
+
                 type="number"
+
                 name="age"
+
                 placeholder="Enter Age"
+
                 value={user.age}
+
                 onChange={handleChange}
+
             />
 
             <button type="submit">
-                Register
+
+                {selectedUser ? "Update User" : "Register User"}
+
             </button>
 
-            {message && <p className="success">{message}</p>}
+            {
 
-            {error && <p className="error">{error}</p>}
+                message &&
+
+                <p className="success">
+
+                    {message}
+
+                </p>
+
+            }
+
+            {
+
+                error &&
+
+                <p className="error">
+
+                    {error}
+
+                </p>
+
+            }
 
         </form>
 
