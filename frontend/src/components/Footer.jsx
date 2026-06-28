@@ -1,16 +1,23 @@
+import "../styles/Footer.css";
 function Footer() {
-  return (
+  const currentYear = new Date().getFullYear();
 
+  return (
     <footer className="footer">
 
-      <p>
+      <div className="footer-content">
 
-        © 2026 Arul Jebaraj M
+        <p>
+          © {currentYear} MERN User Management System
+        </p>
 
-      </p>
+        <p>
+          Developed by <strong>Arul Jebaraj M</strong>
+        </p>
+
+      </div>
 
     </footer>
-
   );
 }
 

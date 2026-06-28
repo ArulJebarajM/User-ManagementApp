@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
+import { FaUsersCog } from "react-icons/fa";
+import "../styles/Navbar.css";
 
 function Navbar() {
   return (
-
     <nav className="navbar">
+      <div className="logo">
+        <FaUsersCog />
+        <span>MERN User Management</span>
+      </div>
 
-      <h2>MERN User Management</h2>
-
-      <ul>
-
+      <ul className="nav-links">
         <li>
           <Link to="/">Home</Link>
         </li>
@@ -24,11 +26,8 @@ function Navbar() {
         <li>
           <Link to="/about">About</Link>
         </li>
-
       </ul>
-
     </nav>
-
   );
 }
 

@@ -35,13 +35,33 @@ function UserTable({
 
     if (loading) {
 
-        return <h2>Loading users...</h2>;
+        return (
+
+            <div className="loading">
+
+                <div className="spinner"></div>
+
+                <p>Loading Users...</p>
+
+            </div>
+
+        );
 
     }
 
     if (users.length === 0) {
 
-        return <h2>No users found.</h2>;
+        return (
+
+            <div className="empty">
+
+                <h2>No Users Found</h2>
+
+                <p>Create your first user.</p>
+
+            </div>
+
+        );
 
     }
 
@@ -54,8 +74,11 @@ function UserTable({
                 <tr>
 
                     <th>Name</th>
+
                     <th>Email</th>
+
                     <th>Age</th>
+
                     <th>Actions</th>
 
                 </tr>
@@ -79,15 +102,27 @@ function UserTable({
                             <td>
 
                                 <button
+
+                                    className="edit-btn"
+
                                     onClick={() => setSelectedUser(user)}
+
                                 >
+
                                     Edit
+
                                 </button>
 
                                 <button
+
+                                    className="delete-btn"
+
                                     onClick={() => deleteUser(user._id)}
+
                                 >
+
                                     Delete
+
                                 </button>
 
                             </td>
