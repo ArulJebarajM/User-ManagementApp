@@ -1,4 +1,5 @@
 import api from "../services/api";
+import LoadingSpinner from "./LoadingSpinner";
 
 function UserTable({
 
@@ -35,19 +36,16 @@ function UserTable({
 
     if (loading) {
 
-        return (
+    return (
 
-            <div className="loading">
+        <LoadingSpinner
+            text="Loading Users..."
+            size="large"
+        />
 
-                <div className="spinner"></div>
+    );
 
-                <p>Loading Users...</p>
-
-            </div>
-
-        );
-
-    }
+}
 
     if (users.length === 0) {
 

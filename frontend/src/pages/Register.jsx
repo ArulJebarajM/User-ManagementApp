@@ -1,79 +1,51 @@
 import UserForm from "../components/UserForm";
+import { FaUserPlus } from "react-icons/fa";
+import "../styles/Form.css";
 
 function Register({
-
-    getUsers,
-
-    selectedUser,
-
-    setSelectedUser
-
+  getUsers,
+  selectedUser,
+  setSelectedUser,
 }) {
+  return (
+    <div className="register-page">
 
-    return (
+      <div className="register-header">
 
-        <div className="page">
+        <div className="register-icon">
+          <FaUserPlus />
+        </div>
 
-            <div className="page-header">
+        <div>
 
-                <h1>
+          <h1>
+            {selectedUser
+              ? "Update User"
+              : "Register New User"}
+          </h1>
 
-                    {
-
-                        selectedUser
-
-                        ?
-
-                        "Update User"
-
-                        :
-
-                        "Register User"
-
-                    }
-
-                </h1>
-
-                <p>
-
-                    Fill in the details below to
-
-                    {
-
-                        selectedUser
-
-                        ?
-
-                        " update an existing user."
-
-                        :
-
-                        " create a new user."
-
-                    }
-
-                </p>
-
-            </div>
-
-            <div className="form-container">
-
-                <UserForm
-
-                    getUsers={getUsers}
-
-                    selectedUser={selectedUser}
-
-                    setSelectedUser={setSelectedUser}
-
-                />
-
-            </div>
+          <p>
+            {selectedUser
+              ? "Update the selected user's information."
+              : "Fill in the form below to create a new user."}
+          </p>
 
         </div>
 
-    );
+      </div>
 
+      <div className="register-card">
+
+        <UserForm
+          getUsers={getUsers}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+        />
+
+      </div>
+
+    </div>
+  );
 }
 
 export default Register;

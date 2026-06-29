@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-
+import LoadingSpinner from "./LoadingSpinner";
+import validateForm from "../utils/FormValidation";
+import "../styles/Form.css";
+import InputField from "./InputField";
+import { FaUser } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { FaBirthdayCake } from "react-icons/fa";
 function UserForm({
   getUsers,
- selectedUser,
+  selectedUser,
   setSelectedUser,
 }) {
   const [user, setUser] = useState({
@@ -12,8 +18,12 @@ function UserForm({
     age: "",
   });
 
+  const [errors, setErrors] = useState({});
+
   const [message, setMessage] = useState("");
+
   const [error, setError] = useState("");
+
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -24,19 +34,35 @@ function UserForm({
         age: selectedUser.age,
       });
     } else {
-      setUser({
-        name: "",
-        email: "",
-        age: "",
-      });
+      resetForm();
     }
   }, [selectedUser]);
 
+  function resetForm() {
+    setUser({
+      name: "",
+      email: "",
+      age: "",
+    });
+
+    setErrors({});
+  }
+
   function handleChange(e) {
+    const { name, value } = e.target;
+
     setUser({
       ...user,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
+
+    setMessage("");
+    setError("");
   }
 
   async function handleSubmit(e) {
@@ -45,18 +71,16 @@ function UserForm({
     setMessage("");
     setError("");
 
-    if (
-      !user.name ||
-      !user.email ||
-      !user.age
-    ) {
-      setError("Please fill all fields.");
+    const validationErrors = validateForm(user);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
-    setSubmitting(true);
-
     try {
+      setSubmitting(true);
+
       let response;
 
       if (selectedUser) {
@@ -75,11 +99,7 @@ function UserForm({
 
       setMessage(response.data.message);
 
-      setUser({
-        name: "",
-        email: "",
-        age: "",
-      });
+      resetForm();
 
       getUsers();
     } catch (err) {
@@ -95,14 +115,10 @@ function UserForm({
   function cancelUpdate() {
     setSelectedUser(null);
 
-    setUser({
-      name: "",
-      email: "",
-      age: "",
-    });
+    resetForm();
 
-    setError("");
     setMessage("");
+    setError("");
   }
 
   return (
@@ -110,44 +126,74 @@ function UserForm({
       className="user-form"
       onSubmit={handleSubmit}
     >
+      {/* Name */}
+<div className="form-group">
+
+<label>Full Name</label>
+
+<div className="input-box">
+
+<FaUser className="input-icon" />
+
+<input
+type="text"
+name="name"
+placeholder="Enter Full Name"
+value={user.name}
+onChange={handleChange}
+/>
+
+</div>
+
+</div>
+
+      {/* Email */}
+
+     <div className="form-group">
+
+<label>Email</label>
+
+<div className="input-box">
+
+<MdEmail className="input-icon" />
+
+<input
+type="email"
+name="email"
+placeholder="Enter Email"
+value={user.email}
+onChange={handleChange}
+/>
+
+</div>
+
+</div>
+
+      {/* Age */}
+
       <div className="form-group">
-        <label>Full Name</label>
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Enter full name"
-          value={user.name}
-          onChange={handleChange}
-          required
-        />
-      </div>
+<label>Age</label>
 
-      <div className="form-group">
-        <label>Email Address</label>
+<div className="input-box">
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter email address"
-          value={user.email}
-          onChange={handleChange}
-          required
-        />
-      </div>
+<FaBirthdayCake className="input-icon" />
 
-      <div className="form-group">
-        <label>Age</label>
+<input
+type="number"
+name="age"
+placeholder="Enter Age"
+value={user.age}
+onChange={handleChange}
+/>
 
-        <input
-          type="number"
-          name="age"
-          placeholder="Enter age"
-          value={user.age}
-          onChange={handleChange}
-          required
-        />
-      </div>
+</div>
+
+</div>
+
+        
+
+      {/* Buttons */}
 
       <div className="form-buttons">
         <button
@@ -155,13 +201,21 @@ function UserForm({
           className="submit-btn"
           disabled={submitting}
         >
-          {submitting
-            ? selectedUser
-              ? "Updating..."
-              : "Registering..."
-            : selectedUser
-            ? "Update User"
-            : "Register User"}
+          {submitting ? (
+            <>
+              <LoadingSpinner />
+
+              <span>
+                {selectedUser
+                  ? " Updating..."
+                  : " Registering..."}
+              </span>
+            </>
+          ) : selectedUser ? (
+            "Update User"
+          ) : (
+            "Register User"
+          )}
         </button>
 
         {selectedUser && (

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Layout from "./components/Layout";
 
 import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
 import Register from "./pages/Register";
 import Users from "./pages/User";
 import About from "./pages/About";
@@ -12,39 +13,65 @@ import NotFound from "./pages/NotFound";
 import api from "./services/api";
 
 function App() {
+
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   async function getUsers() {
+
     try {
+
       setLoading(true);
 
       const response = await api.get("/register");
 
       setUsers(response.data.users);
+
     } catch (error) {
+
       console.log(error);
+
     } finally {
+
       setLoading(false);
+
     }
+
   }
 
   useEffect(() => {
+
     getUsers();
+
   }, []);
 
   return (
+
     <Routes>
+
       <Route path="/" element={<Layout />}>
 
-        {/* Home Page */}
+        {/* Home */}
+
         <Route
           index
           element={<Home users={users} />}
         />
 
-        {/* Register Page */}
+        {/* Dashboard */}
+
+        <Route
+          path="dashboard"
+          element={
+            <Dashboard
+              users={users}
+            />
+          }
+        />
+
+        {/* Register */}
+
         <Route
           path="register"
           element={
@@ -56,7 +83,8 @@ function App() {
           }
         />
 
-        {/* Users Page */}
+        {/* Users */}
+
         <Route
           path="users"
           element={
@@ -69,21 +97,26 @@ function App() {
           }
         />
 
-        {/* About Page */}
+        {/* About */}
+
         <Route
           path="about"
           element={<About />}
         />
 
-        {/* 404 Page */}
+        {/* 404 */}
+
         <Route
           path="*"
           element={<NotFound />}
         />
 
       </Route>
+
     </Routes>
+
   );
+
 }
 
 export default App;

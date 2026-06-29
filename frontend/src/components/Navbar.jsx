@@ -1,34 +1,80 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { FaUsersCog } from "react-icons/fa";
 import "../styles/Navbar.css";
 
 function Navbar() {
+
   return (
+
     <nav className="navbar">
+
       <div className="logo">
+
         <FaUsersCog />
+
         <span>MERN User Management</span>
+
       </div>
 
       <ul className="nav-links">
+
         <li>
-          <Link to="/">Home</Link>
+
+          <NavLink
+            to="/"
+            end
+          >
+            Home
+          </NavLink>
+
         </li>
 
         <li>
-          <Link to="/register">Register</Link>
+
+          <NavLink
+            to="/dashboard"
+          >
+            Dashboard
+          </NavLink>
+
         </li>
 
         <li>
-          <Link to="/users">Users</Link>
+
+          <NavLink
+            to="/register"
+          >
+            Register
+          </NavLink>
+
         </li>
 
         <li>
-          <Link to="/about">About</Link>
+
+          <NavLink
+            to="/users"
+          >
+            Users
+          </NavLink>
+
         </li>
+
+        <li>
+
+          <NavLink
+            to="/about"
+          >
+            About
+          </NavLink>
+
+        </li>
+
       </ul>
+
     </nav>
+
   );
+
 }
 
 export default Navbar;
