@@ -1,142 +1,222 @@
+import { useState } from "react";
+import {
+  FaEdit,
+  FaTrash,
+  FaUserCircle,
+} from "react-icons/fa";
+
 import api from "../services/api";
-import LoadingSpinner from "./LoadingSpinner";
+import TableHeader from "./TableHeader";
+import Pagination from "./Pagination";
 
 function UserTable({
-
-    users,
-    loading,
-    getUsers,
-    setSelectedUser
-
+  users,
+  loading,
+  getUsers,
+  setSelectedUser,
 }) {
+  const [sortField, setSortField] = useState("name");
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1);
 
-    async function deleteUser(id) {
+  const usersPerPage = 5;
 
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this user?"
-        );
-
-        if (!confirmDelete) return;
-
-        try {
-
-            await api.delete(`/register/${id}`);
-
-            getUsers();
-
-        }
-
-        catch (error) {
-
-            console.log(error);
-
-        }
-
-    }
-
-    if (loading) {
-
-    return (
-
-        <LoadingSpinner
-            text="Loading Users..."
-            size="large"
-        />
-
+  async function deleteUser(id) {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this user?"
     );
 
-}
+    if (!confirmDelete) return;
 
-    if (users.length === 0) {
+    try {
+      await api.delete(`/register/${id}`);
+      getUsers();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-        return (
+  function handleSort(field) {
+    let order = "asc";
 
-            <div className="empty">
-
-                <h2>No Users Found</h2>
-
-                <p>Create your first user.</p>
-
-            </div>
-
-        );
-
+    if (field === sortField && sortOrder === "asc") {
+      order = "desc";
     }
 
+    setSortField(field);
+    setSortOrder(order);
+  }
+
+  // -------------------------
+  // Sort Users
+  // -------------------------
+
+  const sortedUsers = [...users].sort((a, b) => {
+    let valueA = a[sortField];
+    let valueB = b[sortField];
+
+    if (sortField === "age") {
+      valueA = Number(valueA);
+      valueB = Number(valueB);
+    } else {
+      valueA = valueA.toLowerCase();
+      valueB = valueB.toLowerCase();
+    }
+
+    if (valueA < valueB) {
+      return sortOrder === "asc" ? -1 : 1;
+    }
+
+    if (valueA > valueB) {
+      return sortOrder === "asc" ? 1 : -1;
+    }
+
+    return 0;
+  });
+
+  // -------------------------
+  // Pagination
+  // -------------------------
+
+  const totalPages = Math.ceil(
+    sortedUsers.length / usersPerPage
+  );
+
+  const indexOfLast = currentPage * usersPerPage;
+
+  const indexOfFirst = indexOfLast - usersPerPage;
+
+  const currentUsers = sortedUsers.slice(
+    indexOfFirst,
+    indexOfLast
+  );
+
+  // -------------------------
+  // Loading
+  // -------------------------
+
+  if (loading) {
     return (
+      <div className="loading">
+        <div className="spinner"></div>
+        <h3>Loading Users...</h3>
+      </div>
+    );
+  }
 
-        <table>
+  // -------------------------
+  // Empty
+  // -------------------------
 
-            <thead>
+  if (users.length === 0) {
+    return (
+      <div className="empty">
+        <h2>No Users Found</h2>
+        <p>Create your first user.</p>
+      </div>
+    );
+  }
 
-                <tr>
+  // -------------------------
+  // Table
+  // -------------------------
 
-                    <th>Name</th>
+  return (
+    <>
+      <div className="table-container">
+        <table className="user-table">
+          <thead>
+            <tr>
+              <TableHeader
+                label="Name"
+                sortField="name"
+                currentSort={sortField}
+                sortOrder={sortOrder}
+                onSort={handleSort}
+              />
 
-                    <th>Email</th>
+              <TableHeader
+                label="Email"
+                sortField="email"
+                currentSort={sortField}
+                sortOrder={sortOrder}
+                onSort={handleSort}
+              />
 
-                    <th>Age</th>
+              <TableHeader
+                label="Age"
+                sortField="age"
+                currentSort={sortField}
+                sortOrder={sortOrder}
+                onSort={handleSort}
+              />
 
-                    <th>Actions</th>
+              <th>Status</th>
 
-                </tr>
+              <th>Actions</th>
+            </tr>
+          </thead>
 
-            </thead>
+          <tbody>
+            {currentUsers.map((user) => (
+              <tr key={user._id}>
+                <td>
+                  <div className="user-info">
+                    <FaUserCircle className="avatar" />
+                    <span>{user.name}</span>
+                  </div>
+                </td>
 
-            <tbody>
+                <td>{user.email}</td>
 
-                {
+                <td>{user.age}</td>
 
-                    users.map((user) => (
+                <td>
+                  {Number(user.age) >= 18 ? (
+                    <span className="badge adult">
+                      Adult
+                    </span>
+                  ) : (
+                    <span className="badge minor">
+                      Minor
+                    </span>
+                  )}
+                </td>
 
-                        <tr key={user._id}>
+                <td>
+                  <div className="action-buttons">
+                    <button
+                      className="edit-btn"
+                      onClick={() =>
+                        setSelectedUser(user)
+                      }
+                    >
+                      <FaEdit />
+                    </button>
 
-                            <td>{user.name}</td>
-
-                            <td>{user.email}</td>
-
-                            <td>{user.age}</td>
-
-                            <td>
-
-                                <button
-
-                                    className="edit-btn"
-
-                                    onClick={() => setSelectedUser(user)}
-
-                                >
-
-                                    Edit
-
-                                </button>
-
-                                <button
-
-                                    className="delete-btn"
-
-                                    onClick={() => deleteUser(user._id)}
-
-                                >
-
-                                    Delete
-
-                                </button>
-
-                            </td>
-
-                        </tr>
-
-                    ))
-
-                }
-
-            </tbody>
-
+                    <button
+                      className="delete-btn"
+                      onClick={() =>
+                        deleteUser(user._id)
+                      }
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
+      </div>
 
-    );
-
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+      />
+    </>
+  );
 }
 
 export default UserTable;

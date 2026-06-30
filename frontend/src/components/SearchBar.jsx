@@ -1,30 +1,55 @@
+import { FaSearch } from "react-icons/fa";
+
 function SearchBar({
+  search,
+  setSearch,
+  sortBy,
+  setSortBy
+}) {
+  return (
+    <div className="search-container">
 
-search,
-setSearch
+      <div className="search-input">
 
-}){
+        <FaSearch className="search-icon" />
 
-return(
+        <input
+          type="text"
+          placeholder="Search by name or email..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
-<div className="search-box">
+      </div>
 
-<input
+      <select
+        className="sort-select"
+        value={sortBy}
+        onChange={(e) => setSortBy(e.target.value)}
+      >
 
-type="text"
+        <option value="latest">Latest</option>
 
-placeholder="Search by name or email..."
+        <option value="nameAsc">
+          Name (A-Z)
+        </option>
 
-value={search}
+        <option value="nameDesc">
+          Name (Z-A)
+        </option>
 
-onChange={(e)=>setSearch(e.target.value)}
+        <option value="ageAsc">
+          Age (Low-High)
+        </option>
 
-/>
+        <option value="ageDesc">
+          Age (High-Low)
+        </option>
 
-</div>
+      </select>
 
-);
-
+    </div>
+  );
 }
 
 export default SearchBar;

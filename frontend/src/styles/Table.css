@@ -1,0 +1,250 @@
+/* ===========================
+   USER TABLE
+=========================== */
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 30px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.user-table thead {
+  background: #0f172a;
+}
+
+.user-table thead th {
+  color: #ffffff;
+  padding: 18px;
+  font-size: 15px;
+  text-align: left;
+  letter-spacing: .5px;
+}
+
+.user-table tbody tr {
+  transition: .25s;
+}
+
+.user-table tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.user-table tbody tr:hover {
+  background: #eff6ff;
+}
+
+.user-table td {
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+.user-name {
+  font-weight: 600;
+}
+
+.user-email {
+  color: #2563eb;
+}
+
+.user-age {
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: white;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.edit-btn {
+  background: #f59e0b;
+}
+
+.edit-btn:hover {
+  background: #d97706;
+}
+
+.delete-btn {
+  background: #ef4444;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+}
+
+/* ===========================
+   STATUS BADGES
+=========================== */
+
+.badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 40px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.badge-adult {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badge-minor {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+/* ===========================
+   SEARCH
+=========================== */
+
+.search-container {
+  margin: 25px 0;
+}
+
+.search-box {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  transition: .25s;
+}
+
+.search-box:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+}
+
+/* ===========================
+   SORT BUTTONS
+=========================== */
+
+.sort-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+}
+
+.sort-btn:hover {
+  color: #38bdf8;
+}
+
+/* ===========================
+   EMPTY STATE
+=========================== */
+
+.empty-table {
+  padding: 60px;
+  text-align: center;
+}
+
+.empty-table h2 {
+  margin-bottom: 15px;
+}
+
+.empty-table p {
+  color: #6b7280;
+}
+
+/* ===========================
+   PAGINATION
+=========================== */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 30px 0;
+}
+
+.pagination button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #e2e8f0;
+}
+
+.pagination button.active {
+  background: #2563eb;
+  color: white;
+}
+
+.pagination button:hover {
+  background: #1d4ed8;
+  color: white;
+}
+
+/* ===========================
+   LOADING
+=========================== */
+
+.loading-table {
+  text-align: center;
+  padding: 70px;
+}
+
+.loading-table p {
+  margin-top: 15px;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:992px){
+
+.user-table{
+min-width:700px;
+}
+
+}
+
+@media(max-width:768px){
+
+.action-buttons{
+
+flex-direction:column;
+
+}
+
+.edit-btn,
+.delete-btn{
+
+width:100%;
+
+}
+
+}
+
+@media(max-width:600px){
+
+.user-table{
+
+min-width:600px;
+
+}
+
+}

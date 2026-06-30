@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Layout from "./components/Layout";
 
@@ -17,6 +17,10 @@ function App() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Search & Sorting
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("latest");
 
   async function getUsers() {
 
@@ -46,20 +50,70 @@ function App() {
 
   }, []);
 
+  const filteredUsers = useMemo(() => {
+
+    let data = users.filter((user) => {
+
+      return (
+
+        user.name
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+
+        user.email
+          .toLowerCase()
+          .includes(search.toLowerCase())
+
+      );
+
+    });
+
+    switch (sortBy) {
+
+      case "nameAsc":
+
+        return [...data].sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+
+      case "nameDesc":
+
+        return [...data].sort((a, b) =>
+          b.name.localeCompare(a.name)
+        );
+
+      case "ageAsc":
+
+        return [...data].sort(
+          (a, b) => Number(a.age) - Number(b.age)
+        );
+
+      case "ageDesc":
+
+        return [...data].sort(
+          (a, b) => Number(b.age) - Number(a.age)
+        );
+
+      case "latest":
+
+      default:
+
+        return [...data].reverse();
+
+    }
+
+  }, [users, search, sortBy]);
+
   return (
 
     <Routes>
 
       <Route path="/" element={<Layout />}>
 
-        {/* Home */}
-
         <Route
           index
           element={<Home users={users} />}
         />
-
-        {/* Dashboard */}
 
         <Route
           path="dashboard"
@@ -69,8 +123,6 @@ function App() {
             />
           }
         />
-
-        {/* Register */}
 
         <Route
           path="register"
@@ -83,28 +135,26 @@ function App() {
           }
         />
 
-        {/* Users */}
-
         <Route
           path="users"
           element={
             <Users
-              users={users}
+              users={filteredUsers}
               loading={loading}
               getUsers={getUsers}
               setSelectedUser={setSelectedUser}
+              search={search}
+              setSearch={setSearch}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
             />
           }
         />
-
-        {/* About */}
 
         <Route
           path="about"
           element={<About />}
         />
-
-        {/* 404 */}
 
         <Route
           path="*"
