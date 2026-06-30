@@ -1,247 +1,355 @@
 import { useEffect, useState } from "react";
+import {
+  FaUser,
+  FaEnvelope,
+  FaBirthdayCake,
+  FaSave,
+  FaTimes
+} from "react-icons/fa";
 import api from "../services/api";
-import LoadingSpinner from "./LoadingSpinner";
-import validateForm from "../utils/FormValidation";
-import "../styles/Form.css";
-import InputField from "./InputField";
-import { FaUser } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
-import { FaBirthdayCake } from "react-icons/fa";
+
 function UserForm({
   getUsers,
   selectedUser,
-  setSelectedUser,
+  setSelectedUser
 }) {
-  const [user, setUser] = useState({
+
+  const initialState = {
     name: "",
     email: "",
-    age: "",
-  });
+    age: ""
+  };
+
+  const [user, setUser] = useState(initialState);
 
   const [errors, setErrors] = useState({});
 
   const [message, setMessage] = useState("");
 
-  const [error, setError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+
     if (selectedUser) {
+
       setUser({
         name: selectedUser.name,
         email: selectedUser.email,
-        age: selectedUser.age,
+        age: selectedUser.age
       });
+
     } else {
-      resetForm();
+
+      setUser(initialState);
+
     }
+
   }, [selectedUser]);
 
-  function resetForm() {
-    setUser({
-      name: "",
-      email: "",
-      age: "",
-    });
-
-    setErrors({});
-  }
-
   function handleChange(e) {
+
     const { name, value } = e.target;
 
     setUser({
       ...user,
-      [name]: value,
+      [name]: value
     });
 
     setErrors({
       ...errors,
-      [name]: "",
+      [name]: ""
     });
 
-    setMessage("");
-    setError("");
+  }
+
+  function validateForm() {
+
+    let validationErrors = {};
+
+    if (!user.name.trim()) {
+
+      validationErrors.name = "Name is required.";
+
+    } else if (user.name.length < 3) {
+
+      validationErrors.name =
+        "Name must contain at least 3 characters.";
+
+    }
+
+    if (!user.email.trim()) {
+
+      validationErrors.email = "Email is required.";
+
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(user.email)
+    ) {
+
+      validationErrors.email = "Invalid email address.";
+
+    }
+
+    if (!user.age) {
+
+      validationErrors.age = "Age is required.";
+
+    } else if (Number(user.age) < 18) {
+
+      validationErrors.age =
+        "Age must be at least 18.";
+
+    }
+
+    setErrors(validationErrors);
+
+    return Object.keys(validationErrors).length === 0;
+
   }
 
   async function handleSubmit(e) {
+
     e.preventDefault();
 
     setMessage("");
-    setError("");
 
-    const validationErrors = validateForm(user);
+    setErrorMessage("");
 
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
-      setSubmitting(true);
+
+      setLoading(true);
 
       let response;
 
       if (selectedUser) {
+
         response = await api.put(
           `/register/${selectedUser._id}`,
           user
         );
 
         setSelectedUser(null);
+
       } else {
+
         response = await api.post(
           "/register",
           user
         );
+
       }
 
       setMessage(response.data.message);
 
-      resetForm();
+      setUser(initialState);
 
       getUsers();
-    } catch (err) {
-      setError(
-        err.response?.data?.error ||
-          "Something went wrong."
-      );
-    } finally {
-      setSubmitting(false);
+
     }
+
+    catch (error) {
+
+      setErrorMessage(
+        error.response?.data?.error ||
+        "Something went wrong."
+      );
+
+    }
+
+    finally {
+
+      setLoading(false);
+
+    }
+
   }
 
   function cancelUpdate() {
+
     setSelectedUser(null);
 
-    resetForm();
+    setUser(initialState);
+
+    setErrors({});
 
     setMessage("");
-    setError("");
+
+    setErrorMessage("");
+
   }
 
   return (
+
     <form
       className="user-form"
       onSubmit={handleSubmit}
     >
+
       {/* Name */}
-<div className="form-group">
 
-<label>Full Name</label>
+      <div className="form-group">
 
-<div className="input-box">
+        <label>
 
-<FaUser className="input-icon" />
+          <FaUser />
 
-<input
-type="text"
-name="name"
-placeholder="Enter Full Name"
-value={user.name}
-onChange={handleChange}
-/>
+          Full Name
 
-</div>
+        </label>
 
-</div>
+        <input
+          type="text"
+          name="name"
+          placeholder="Enter full name"
+          value={user.name}
+          onChange={handleChange}
+        />
+
+        {errors.name && (
+
+          <small className="error-text">
+
+            {errors.name}
+
+          </small>
+
+        )}
+
+      </div>
 
       {/* Email */}
 
-     <div className="form-group">
+      <div className="form-group">
 
-<label>Email</label>
+        <label>
 
-<div className="input-box">
+          <FaEnvelope />
 
-<MdEmail className="input-icon" />
+          Email Address
 
-<input
-type="email"
-name="email"
-placeholder="Enter Email"
-value={user.email}
-onChange={handleChange}
-/>
+        </label>
 
-</div>
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter email"
+          value={user.email}
+          onChange={handleChange}
+        />
 
-</div>
+        {errors.email && (
+
+          <small className="error-text">
+
+            {errors.email}
+
+          </small>
+
+        )}
+
+      </div>
 
       {/* Age */}
 
       <div className="form-group">
 
-<label>Age</label>
+        <label>
 
-<div className="input-box">
+          <FaBirthdayCake />
 
-<FaBirthdayCake className="input-icon" />
+          Age
 
-<input
-type="number"
-name="age"
-placeholder="Enter Age"
-value={user.age}
-onChange={handleChange}
-/>
+        </label>
 
-</div>
+        <input
+          type="number"
+          name="age"
+          placeholder="Enter age"
+          value={user.age}
+          onChange={handleChange}
+        />
 
-</div>
+        {errors.age && (
 
-        
+          <small className="error-text">
 
-      {/* Buttons */}
+            {errors.age}
+
+          </small>
+
+        )}
+
+      </div>
 
       <div className="form-buttons">
-        <button
-          type="submit"
-          className="submit-btn"
-          disabled={submitting}
-        >
-          {submitting ? (
-            <>
-              <LoadingSpinner />
 
-              <span>
-                {selectedUser
-                  ? " Updating..."
-                  : " Registering..."}
-              </span>
-            </>
-          ) : selectedUser ? (
-            "Update User"
-          ) : (
-            "Register User"
-          )}
+        <button
+          className="submit-btn"
+          type="submit"
+          disabled={loading}
+        >
+
+          <FaSave />
+
+          {" "}
+
+          {loading
+            ? selectedUser
+              ? "Updating..."
+              : "Registering..."
+            : selectedUser
+            ? "Update User"
+            : "Register User"}
+
         </button>
 
         {selectedUser && (
+
           <button
             type="button"
             className="cancel-btn"
             onClick={cancelUpdate}
           >
+
+            <FaTimes />
+
+            {" "}
+
             Cancel
+
           </button>
+
         )}
+
       </div>
 
       {message && (
+
         <div className="success">
+
           {message}
+
         </div>
+
       )}
 
-      {error && (
+      {errorMessage && (
+
         <div className="error">
-          {error}
+
+          {errorMessage}
+
         </div>
+
       )}
+
     </form>
+
   );
+
 }
 
 export default UserForm;

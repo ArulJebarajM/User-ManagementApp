@@ -1,0 +1,138 @@
+/* ==========================
+   Toast Container
+========================== */
+
+.toast-container {
+  position: fixed;
+
+  top: 25px;
+  right: 25px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 15px;
+
+  z-index: 99999;
+}
+
+/* ==========================
+   Toast
+========================== */
+
+.toast {
+  min-width: 320px;
+
+  max-width: 400px;
+
+  padding: 16px 20px;
+
+  border-radius: 10px;
+
+  color: white;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+
+  animation: slideIn 0.35s ease;
+
+  font-size: 15px;
+}
+
+/* ==========================
+   Toast Types
+========================== */
+
+.toast-success {
+  background: #16a34a;
+}
+
+.toast-error {
+  background: #dc2626;
+}
+
+.toast-warning {
+  background: #d97706;
+}
+
+.toast-info {
+  background: #2563eb;
+}
+
+/* ==========================
+   Close Button
+========================== */
+
+.toast button {
+  background: transparent;
+
+  border: none;
+
+  color: white;
+
+  font-size: 18px;
+
+  cursor: pointer;
+
+  margin-left: 18px;
+}
+
+.toast button:hover {
+  opacity: 0.8;
+}
+
+/* ==========================
+   Slide Animation
+========================== */
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(100%);
+
+    opacity: 0;
+  }
+}
+
+.toast.hide {
+  animation: slideOut 0.3s forwards;
+}
+
+/* ==========================
+   Mobile
+========================== */
+
+@media (max-width: 600px) {
+  .toast-container {
+    right: 10px;
+    left: 10px;
+    top: 15px;
+  }
+
+  .toast {
+    min-width: auto;
+    width: 100%;
+  }
+}

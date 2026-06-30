@@ -8,6 +8,6 @@ import "./styles/Table.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <App />
-  </BrowserRouter>
+<App />
+</BrowserRouter>
 );
